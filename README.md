@@ -30,6 +30,7 @@ python3.7 get-pip.py
 ### Deployment
 Tested with Python 3.7 on Ubuntu 16.04.
 * Clone repository (`git clone git@github.com:SnapperGPS/snappergps-backend.git` or `git clone https://github.com/SnapperGPS/snappergps-backend.git`).
+* Complete [config.py](web_app/processing/config.py) with the information about your SQL database. If you also want e-mail notifications, push notfications, and/or Telegram notifications to work, then complete the respective sections, too.
 * Create and activate virtual environment *snappergps_env* (`python3.7 -m venv snappergps_env` and `source snappergps_env/bin/activate`).
 * Install requirements (`python3.7 -m pip install -r snappergps-backend/requirements.txt`).
 * Optionally, install *mkl-fft* for faster acquisition. (Might not work depending on the server hardware.)
