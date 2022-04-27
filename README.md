@@ -9,7 +9,18 @@ This is the back-end of the [SnapperGPS web application](https://snapper-gps.her
 
 ## Overview
 
-*To-do.*
+The code in this repository is split into two parts:
+
+First, the directory [jonas_code/new_utilities](jonas_code/new_utilities) is basically identical [the *snapshot-gnss-algorithms* repository](https://github.com/JonasBchrt/snapshot-gnss-algorithms) and contains the core snapshot GNSS algorithms presented in
+
+> Jonas Beuchert and Alex Rogers. 2021. SnapperGPS: Algorithms for Energy-Efficient Low-Cost Location Estimation Using GNSS Signal Snapshots. In SenSys ’21: ACM Conference on Embedded Networked Sensor Systems, November, 2021, Coimbra, Portugal. ACM, New York, NY, USA, 13 pages. https://doi.org/10.1145/3485730.3485931.
+
+For details on the algorithms, please refer to the respective repository and this open-access publication.
+
+Second, the directory [web_app/processing](web_app/processing) contains an additional layer of code to interface with these algorithms. There are two top-level Python scripts. First, the script `maintain_navigation_data.py` downloads satellite navigation data to the directory [web_app/processing/navigation_data](web_app/processing/navigation_data). It updates the local navigation data every 15 min using [a server of the BKG](https://igs.bkg.bund.de/root_ftp/MGEX/BRDC/) or [a server of the NASA](https://cddis.nasa.gov/archive/gps/data/daily/) as source. Note that the navigation data is pre-processed to reduce the file size and accelerate reading and then stored in [NumPy's `.npy` format](https://numpy.org/doc/stable/reference/generated/numpy.lib.format.html) seperately as a 2D array for every day and satellite system (GPS - G, Galileo - E, BeiDou - C). The files are named `year_day_gnss.npy`. Processing data from a certain day requires having satellite navigation data available for this day. The second important Python script is `process_queue.py`, which handles the location estimation and calls functions from the directory mentioned first. While it is usually sufficient to run a single instance of the navigation data script, you can run multiple instances of the processing script to parallelise the processing of datasetd and, thus, to accelerate the processing if the server has sufficient compute ressources. Each instance checks the PostgreSQL database every 5 s for uploads with `Status == waiting` and processes the oldest of such uploads, if at least one is present and satellite navigation data is available on the server. `Status` is first set to `processing` and finally to `complete` when all snapshots have been turned into location estimates and have been entered into the database. The script also handles user notifications via e-mail, push notifcations, or Telegram messages.
+
+For instructions how to set-up the [PostgreSQL](https://www.postgresql.org/) database, please see [the *snappergps-app* repository](https://github.com/SnapperGPS/snappergps-app).
+The most straight-forward way to populate this database with raw data from your SnapperGPS receiver is to host your own version of the SnapperGPS app and to point it to this database.
 
 ## Setting up the back-end on a new server
 
@@ -42,3 +53,10 @@ Tested with Python 3.7 on Ubuntu 16.04.
 * In session *proc0*, activate virtual environment *snappergps_env* (`source snappergps_env/bin/activate`).
 * Run the processing script (`cd snapshot-gnss-backend/web_app/processing/` and `python3.7 process_queue.py` or `python3.7 process_queue.py --no-telegram-bot`). Only one instance shall run the Telegram bot at any time. All other instances shall be started with the `--no-telegram-bot` flag. Optionally, run the script in *proc1*, *proc2*,..., too.
 * Optionally, set the maximum number of snapshots that the acquisition processes in parallel with the `--max-batch-size` command line argument (e.g., `python3.7 process_queue.py --max-batch-size 12`). The default value is *10*. For optimal execution speed choose the value such that the RAM of the platform is reasonably filled, but not overfilled.
+
+### Useful Tmux commands
+* `tmux -S /data/snappergps/tmux list-sessions` to show all shared sessions.
+* `tmux -S /data/snappergps/tmux attach -t proc42` to attach to the shared session named *proc42*.
+* `tmux -S /data/snappergps/tmux new -s proc42` to start a new shared session named *proc42*.
+* `Ctrl`+`b` `d` to detach from a session.
+* `tmux -S /data/snappergps/tmux kill-session -t proc42` to kill the shared session named *proc42*.
