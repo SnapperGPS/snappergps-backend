@@ -55,8 +55,8 @@ Tested with Python 3.7 on Ubuntu 16.04.
 * Optionally, set the maximum number of snapshots that the acquisition processes in parallel with the `--max-batch-size` command line argument (e.g., `python3.7 process_queue.py --max-batch-size 12`). The default value is *10*. For optimal execution speed choose the value such that the RAM of the platform is reasonably filled, but not overfilled.
 
 ### Useful Tmux commands
-* `tmux -S /data/snappergps/tmux list-sessions` to show all shared sessions.
-* `tmux -S /data/snappergps/tmux attach -t proc42` to attach to the shared session named *proc42*.
-* `tmux -S /data/snappergps/tmux new -s proc42` to start a new shared session named *proc42*.
+* `tmux -S /path/to/socket list-sessions` to show all sessions.
+* `tmux -S /path/to/socket attach -t proc42` to attach to the session named *proc42*.
+* `tmux -S /path/to/socket new -s proc42` to start a new session named *proc42*.
 * `Ctrl`+`b` `d` to detach from a session.
-* `tmux -S /data/snappergps/tmux kill-session -t proc42` to kill the shared session named *proc42*.
+* `tmux -S /path/to/socket kill-session -t proc42` to kill the session named *proc42*.
