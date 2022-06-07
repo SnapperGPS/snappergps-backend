@@ -1,0 +1,11 @@
+numpy
+python-telegram-bot
+pymap3d
+autograd
+psycopg2-binary
+pywebpush
+scipy
+scikit-learn == 0.24.0
+autoptim
+PyGeodesy
+rockhound
