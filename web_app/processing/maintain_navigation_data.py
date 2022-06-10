@@ -27,8 +27,7 @@ import traceback
 import config
 # For reading RINEX navigation data files
 sys.path.insert(1, os.path.join(
-    sys.path[0], os.path.join(os.path.dirname(__file__), "..", "..",
-                              "jonas_code", "new_utilities")))
+    sys.path[0], os.path.join(os.path.dirname(__file__), "..", "..", "core")))
 from rinex_preprocessor import preprocess_rinex
 from eph_util import rinexe
 

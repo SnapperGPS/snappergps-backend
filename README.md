@@ -11,7 +11,7 @@ This is the back-end of the [SnapperGPS web application](https://snapper-gps.her
 
 The code in this repository is split into two parts:
 
-First, the directory [jonas_code/new_utilities](jonas_code/new_utilities) is basically identical [the *snapshot-gnss-algorithms* repository](https://github.com/JonasBchrt/snapshot-gnss-algorithms) and contains the core snapshot GNSS algorithms presented in
+First, the directory [core](core) is basically identical [the *snapshot-gnss-algorithms* repository](https://github.com/JonasBchrt/snapshot-gnss-algorithms) and contains the core snapshot GNSS algorithms presented in
 
 > Jonas Beuchert and Alex Rogers. 2021. SnapperGPS: Algorithms for Energy-Efficient Low-Cost Location Estimation Using GNSS Signal Snapshots. In SenSys ’21: ACM Conference on Embedded Networked Sensor Systems, November, 2021, Coimbra, Portugal. ACM, New York, NY, USA, 13 pages. https://doi.org/10.1145/3485730.3485931.
 

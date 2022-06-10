@@ -80,8 +80,7 @@ def _process_upload(cursor, upload_id, reference_points, max_velocity=np.inf,
     rows = cursor.fetchall()
 
     cwd = os.getcwd()  # Current working directory
-    os.chdir(os.path.join(os.path.dirname(__file__), "..", "..", "jonas_code",
-                          "new_utilities"))  # Change dir
+    os.chdir(os.path.join(os.path.dirname(__file__), "..", "..", "core"))  # Change dir
     import backend
 
     # Get the timestamps as additional input

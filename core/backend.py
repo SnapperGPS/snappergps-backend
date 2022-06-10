@@ -101,7 +101,7 @@ snapshot buffer with {len(snapshots)} bytes.""")
     #                                geoid="egm2008-1")
     # Requires to download egm2008-1.pgm from
     # https://geographiclib.sourceforge.io/html/geoid.html#geoidinst
-    # and save it as new_utilities/egm2008-1.pgm
+    # and save it as core/egm2008-1.pgm
     # The following call has a 60-times higher horizontal resolution
     # (elevation) and requires less initialization time
     # height_input = ep.get_elevation(latitude_input, longitude_input, model="SRTM1")
@@ -109,7 +109,7 @@ snapshot buffer with {len(snapshots)} bytes.""")
     # matches  latitude and longitude from
     # https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/ and
     # save it as
-    # new_utilities/digital_elevation_models/*.hgt
+    # core/digital_elevation_models/*.hgt
     # Both alternative options can be combined
 
     if intermediate_frequency is None:
@@ -405,7 +405,7 @@ snapshot buffer with {len(snapshots)} bytes.""")
                     # These parameters determine the max. spatial & temporal
                     # distance between consecutive snapshots to be plausible
                     # Shall depend on the application scenario
-                    max_dist=10.0e3, max_time=30.0,
+                    max_dist=10.0e3, max_time=30.0,  # max_dist=0.5e3, max_time=0.1,  # max_dist=10.0e3, max_time=30.0,
                     # If we would know an initial offset of the timestamps
                     # If data is processed in mini-batches, the error from
                     # previous one

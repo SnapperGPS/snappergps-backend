@@ -3556,12 +3556,12 @@ def get_elevation(latitude, longitude, model='ETOPO1', geoid='egm96-5'):
         model - Relief / elevation model to use, 'ETOPO1' or 'SRTM1'
                 [default='ETOPO1'], download SRTM1 models (.hgt files) from
                 https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/
-                and unpack into 'new_utilities/digital_elevation_models'
+                and unpack into 'core/digital_elevation_models'
                 directory
         geoid - Geoid type and grid to use, 'egm96-5' for EGM96 geoid with 5'
                 grid [default='egm96-5'], download other geoids / resolutions
                 from https://geographiclib.sourceforge.io/html/geoid.html#geoidinst
-                and unpack into 'new_utilities' directory
+                and unpack into 'core' directory
     Output:
         elevation - Coarse elevation estimate for receiver position [m]
                     (GPS ellipsoidal height w.r.t. WGS84 ellipsoid, not w.r.t.
