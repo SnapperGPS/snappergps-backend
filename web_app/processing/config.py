@@ -5,7 +5,7 @@ Author: Jonas Beuchert
 Date: November 2021
 """
 # Website URL (omit '/' at end, include 'https://')
-website_url = "https://snapper-gps.herokuapp.com"
+website_url = "https://snappergps.info"
 
 # PostgreSQL
 database_url = 'todo'

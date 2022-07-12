@@ -1,6 +1,6 @@
 # snappergps-backend
 
-This is the back-end of the [SnapperGPS web application](https://snapper-gps.herokuapp.com/) that takes signal snapshots from a [PostgreSQL](https://www.postgresql.org/) database and puts back location estimates. It is basically an extended version of [the *snapshot-gnss-algorithms* repository](https://github.com/JonasBchrt/snapshot-gnss-algorithms).
+This is the back-end of the [SnapperGPS web application](https://snappergps.info) that takes signal snapshots from a [PostgreSQL](https://www.postgresql.org/) database and puts back location estimates. It is basically an extended version of [the *snapshot-gnss-algorithms* repository](https://github.com/JonasBchrt/snapshot-gnss-algorithms).
 
 ### Table of contents
 
