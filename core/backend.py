@@ -700,5 +700,10 @@ def _estimate_intermediate_frequency2(
     # Correct IF
     if np.isfinite(frequency_error):
         intermediate_frequency += frequency_error
+    # Determine used values
+    try:
+        used_idx = np.where(inliers)[0]
+    except Exception:
+        used_idx = np.array([])
     # Return corrected IF
     return intermediate_frequency, np.where(inliers)[0]
