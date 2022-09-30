@@ -6,6 +6,7 @@ This is the back-end of the [SnapperGPS web application](https://snappergps.info
 
   * [Overview](#overview)
   * [Setting up the back-end on a new server](#setting-up-the-back-end-on-a-new-server)
+  * [Acknowledgements](#acknowledgements)
 
 ## Overview
 
@@ -61,3 +62,8 @@ Tested with Python 3.7 on Ubuntu 16.04.
 * `tmux -S /path/to/socket new -s proc42` to start a new session named *proc42*.
 * `Ctrl`+`b` `d` to detach from a session.
 * `tmux -S /path/to/socket kill-session -t proc42` to kill the session named *proc42*.
+
+## Acknowledgements
+
+SnapperGPS was funded by an EPSRC IAA Technology Fund (D4D00010-BL14).
+Jonas Beuchert and Amanda Matthes are funded by the EPSRC Centre for Doctoral Training in Autonomous Intelligent Machines and Systems (DFT00350-DF03.01, DFT00350-DF03.05).
