@@ -95,9 +95,10 @@ class TelegramBot:
                                     text += (" I expect to process your "
                                              + "data later today. "
                                              + "If it is not processed by "
+                                             + "the end of "
                                              + "tomorrow, please contact "
-                                             + "the SnapperGPS team by "
-                                             + "e-mail.")
+                                             + "the SnapperGPS team via "
+                                             + f"{config.sender_email}.")
                                 elif (processing_date == today
                                       + dt.timedelta(days=1)):
                                     text += (" I expect to process your "
