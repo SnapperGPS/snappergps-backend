@@ -3607,8 +3607,7 @@ def positioning_simplified(snapshot_idx_dict,
             time_error += pos[-1]
             time_error_vec[snapshot_idx] = time_error
             # Remember timestamp of this fix
-            last_plausible_utc = utc[snapshot_idx] # - (1000*time_error).astype(
-                #'timedelta64[ms]')
+            last_plausible_utc = utc[snapshot_idx]
             # Estimate uncertainty from measurement uncertainty and HDOP
             uncertainty_vec[snapshot_idx] = 20.0 * hdop
         else:
