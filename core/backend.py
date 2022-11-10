@@ -706,4 +706,4 @@ def _estimate_intermediate_frequency2(
     except Exception:
         used_idx = np.array([])
     # Return corrected IF
-    return intermediate_frequency, np.where(inliers)[0]
+    return intermediate_frequency, used_idx
