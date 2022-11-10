@@ -286,8 +286,8 @@ Options:
 
                     # Check if the current record can be processed yet
                     if (latest_nav_date['G'] >= last_nav_needed_date
-                            and latest_nav_date['E'] >= last_nav_needed_date
-                            and latest_nav_date['C'] >= last_nav_needed_date
+                                and latest_nav_date['E'] >= last_nav_needed_date
+                                and latest_nav_date['C'] >= last_nav_needed_date
                             and datetime.datetime.utcnow() > earliest_processing_date):
 
                         print('Processing record %s' % upload_id)
@@ -295,7 +295,7 @@ Options:
                         # Get user-provided start and/or end location of track
                         cursor.execute(
                             "SELECT lat, lng, datetime FROM reference_points WHERE "
-                            + "upload_id = '{}'".format(upload_id))
+                            + "upload_id = '{}' ORDER BY datetime ASC".format(upload_id))
                         reference_points = cursor.fetchall()
 
                         # Get user-provided max. receiver velocity
