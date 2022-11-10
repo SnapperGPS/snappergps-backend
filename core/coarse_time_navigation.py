@@ -3569,9 +3569,26 @@ def positioning_simplified(snapshot_idx_dict,
             else:
                 hdop = np.inf
 
-            # Check if uncertainty is small
-            if hdop * 20.0 <= 200.0:
+            # Check plausibility of solution by checking distance to last
+            # plausible solution
+            dist = np.linalg.norm(pos[:3] - pos_init)
+            time_drift = np.abs(pos[-1])
+            if last_plausible_utc is None:
+                time_delta = np.inf
+            else:
+                time_delta = np.abs((
+                    utc[snapshot_idx] - last_plausible_utc
+                    ).item().total_seconds())
+            # Check if uncertainty is small, too
+            if hdop * 20.0 <= 200.0 \
+                    and dist < max_dist * (1 + n_failed) \
+                    and time_drift < max_time * (1 + n_failed) \
+                    and dist < 400 + max_vel * time_delta \
+                    and time_drift < 0.2 + max_time_drift * time_delta:
                 plausible_solution = True
+            else:
+                # TODO: Double check
+                plausible_solution = False
 
         # Check if plausible solution was found
         if plausible_solution:
@@ -3590,8 +3607,8 @@ def positioning_simplified(snapshot_idx_dict,
             time_error += pos[-1]
             time_error_vec[snapshot_idx] = time_error
             # Remember timestamp of this fix
-            last_plausible_utc = utc[snapshot_idx] - (1000*time_error).astype(
-                'timedelta64[ms]')
+            last_plausible_utc = utc[snapshot_idx] # - (1000*time_error).astype(
+                #'timedelta64[ms]')
             # Estimate uncertainty from measurement uncertainty and HDOP
             uncertainty_vec[snapshot_idx] = 20.0 * hdop
         else:
