@@ -286,8 +286,8 @@ Options:
 
                     # Check if the current record can be processed yet
                     if (latest_nav_date['G'] >= last_nav_needed_date
-                                and latest_nav_date['E'] >= last_nav_needed_date
-                                and latest_nav_date['C'] >= last_nav_needed_date
+                            and latest_nav_date['E'] >= last_nav_needed_date
+                            and latest_nav_date['C'] >= last_nav_needed_date
                             and datetime.datetime.utcnow() > earliest_processing_date):
 
                         print('Processing record %s' % upload_id)
