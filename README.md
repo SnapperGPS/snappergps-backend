@@ -77,3 +77,13 @@ funded by the EPSRC Centre for Doctoral Training in
 Autonomous Intelligent Machines and Systems
 (DFT00350-DF03.01, DFT00350-DF03.05) and develop
 SnapperGPS as part of their doctoral studies.
+
+##
+
+This documentation is licensed under a
+[Creative Commons Attribution 4.0 International License][cc-by].
+
+[![CC BY 4.0][cc-by-image]][cc-by]
+
+[cc-by]: http://creativecommons.org/licenses/by/4.0/
+[cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
