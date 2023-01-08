@@ -1895,7 +1895,7 @@ def rinexe(ephemerisfile, system=None):
                         # Multiple systems might be present
                         # Skip lines until desired one is found
                         line = "init"
-                        while not line[0] == system:
+                        while line == "" or not line[0] == system:
                             line = fide.readline()
                     else:
                         line = fide.readline()
