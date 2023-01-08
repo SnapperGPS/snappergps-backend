@@ -3484,8 +3484,8 @@ def positioning_simplified(snapshot_idx_dict,
                                 utc[snapshot_idx] - last_plausible_utc
                                 ).item().total_seconds())
                         if (ls_mode == 'ransac' or np.all(np.abs(res) < 200)) \
-                            and dist < max_dist*(1+n_failed) \
-                                and time_drift < max_time*(1+n_failed) \
+                            and dist < max_dist \
+                                and time_drift < max_time \
                                 and dist < 400 + max_vel * time_delta \
                                 and time_drift < 0.2 + max_time_drift \
                                 * time_delta:
@@ -3581,8 +3581,8 @@ def positioning_simplified(snapshot_idx_dict,
                     ).item().total_seconds())
             # Check if uncertainty is small, too
             if hdop * 20.0 <= 200.0 \
-                    and dist < max_dist * (1 + n_failed) \
-                    and time_drift < max_time * (1 + n_failed) \
+                    and dist < max_dist \
+                    and time_drift < max_time \
                     and dist < 400 + max_vel * time_delta \
                     and time_drift < 0.2 + max_time_drift * time_delta:
                 plausible_solution = True
