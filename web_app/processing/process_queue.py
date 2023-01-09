@@ -28,7 +28,7 @@ sys.path.insert(0, '')
 
 
 def _upload_result(snapshot_id, lat, lng, time_correction, horizontal_error):
-    """Upload estimated values for a single snpashot to the database."""
+    """Upload estimated values for a single snapshot to the database."""
     cursor.execute("INSERT INTO positions(position_id, snapshot_id, estimated_lat, estimated_lng, estimated_time_correction, estimated_horizontal_error) VALUES(DEFAULT, %s, %s, %s, %s, %s)",
                    (snapshot_id, lat, lng, time_correction, horizontal_error))
     print('Uploaded record.')
@@ -292,16 +292,16 @@ Options:
 
                         print('Processing record %s' % upload_id)
 
-                        # Get user-provided start and/or end location of track
-                        cursor.execute(
-                            "SELECT lat, lng, datetime FROM reference_points WHERE "
-                            + "upload_id = '{}'".format(upload_id))
-                        reference_points = cursor.fetchall()
-
                         # Get user-provided max. receiver velocity
                         max_velocity = row[8]
                         if max_velocity is None:
                             max_velocity = np.inf
+
+                        # Get user-provided start and/or end location of track
+                        cursor.execute(
+                            "SELECT lat, lng, datetime FROM reference_points WHERE "
+                            + "upload_id = '{}' ORDER BY datetime ASC".format(upload_id))
+                        reference_points = cursor.fetchall()
 
                         # Estimate locations for this record
                         _process_upload(cursor, upload_id, reference_points,
