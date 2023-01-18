@@ -209,7 +209,7 @@ Options:
             sys.exit()
         elif opt in ("-n", "--no-telegram-bot"):
             run_telegram_bot = False
-        elif opt in ("-b", "--max_batch_size"):
+        elif opt in ("-b", "--max-batch-size"):
             max_batch_size = int(arg)
 
     # Where .npy, .rnx, and .nYY files are stored
