@@ -51,7 +51,7 @@ class TelegramBot:
                 except Exception:
                     text = "I am sorry, but I could not connect to " \
                         + "my database. Please try again later and " \
-                        + "contact the SnapperGPS team via e-mail " \
+                        + f"contact {config.sender_name} via e-mail " \
                         + "if the problem persists."
                 else:
                     # Try to get matching database entry
@@ -97,7 +97,7 @@ class TelegramBot:
                                              + "If it is not processed by "
                                              + "the end of "
                                              + "tomorrow, please contact "
-                                             + "the SnapperGPS team via "
+                                             + f"{config.sender_name} via "
                                              + f"{config.sender_email}.")
                                 elif (processing_date == today
                                       + dt.timedelta(days=1)):

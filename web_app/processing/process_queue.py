@@ -13,7 +13,7 @@ import sys
 # For sleeping
 import time
 # Telegram bots for error reporting and user notification
-from telegram import Bot
+import error_reporting
 import telegram_bot
 import traceback
 import getopt
@@ -340,8 +340,7 @@ Options:
 
         except Exception:
             # Message me if an error occurs
-            Bot(config.server_bot_token).send_message(
-                    chat_id=config.server_bot_contact_chat_id, text="""
+            error_reporting.report_error(error_text="""
 Error during processing:
 
 {}

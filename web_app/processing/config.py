@@ -32,3 +32,6 @@ server_bot_token = "todo"
 # Telegram chat ID to be contacted in case of an error
 # on the server
 server_bot_contact_chat_id = "todo"
+
+# Owner name (appears in some notifications as sender)
+sender_name = "todo"

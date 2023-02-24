@@ -15,7 +15,7 @@ from email.mime.multipart import MIMEMultipart
 # For sleeping
 import time
 # Telegram bot for error reporting
-from telegram import Bot
+import error_reporting
 import traceback
 # For asynchronous execution
 import threading
@@ -77,8 +77,7 @@ class EmailBot:
 
         except Exception:
             # Message me if an error occurs
-            Bot(config.server_bot_token).send_message(
-                    chat_id=config.server_bot_contact_chat_id, text="""
+            error_reporting.report_error(error_text="""
 Error in email bot: {}
 """.format(traceback.format_exc()))
         finally:
@@ -147,7 +146,7 @@ Error in email bot: {}
             This is for your upload ID {upload_id} and device ID {device_id}.
 
 
-            The SnapperGPS Team"""
+            {config.sender_name}"""
             html = f"""\
 <html>
   <body>
@@ -160,7 +159,7 @@ Error in email bot: {}
        <br>
        This is for your upload ID {upload_id} and device ID {device_id}.
        <br><br><br>
-       The SnapperGPS Team
+       {config.sender_name}
     </p>
   </body>
 </html>
@@ -193,7 +192,7 @@ Error in email bot: {}
             This is fur your upload ID {upload_id} and device ID {device_id}.
 
 
-            The SnapperGPS Team"""
+            {config.sender_name}"""
             html = f"""\
 <html>
   <body>
@@ -207,7 +206,7 @@ Error in email bot: {}
        <br>
        This is for your upload ID {upload_id} and device ID {device_id}.
        <br><br><br>
-       The SnapperGPS Team
+       {config.sender_name}
     </p>
   </body>
 </html>

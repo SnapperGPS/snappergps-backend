@@ -21,10 +21,8 @@ import time
 # For uncompression
 import gzip
 # For error reporting
-from telegram import Bot
+import error_reporting
 import traceback
-# Credentials/secrets/tokens
-import config
 # For reading RINEX navigation data files
 sys.path.insert(1, os.path.join(
     sys.path[0], os.path.join(os.path.dirname(__file__), "..", "..", "core")))
@@ -344,7 +342,6 @@ if __name__ == "__main__":
 
     except Exception:
         # Send me a Telegram message if something went wrong
-        Bot(config.server_bot_token).send_message(
-                chat_id=config.server_bot_contact_chat_id, text="""
+        error_reporting.report_error(error_text="""
 Error during maintaing database: {}
 """.format(traceback.format_exc()))
