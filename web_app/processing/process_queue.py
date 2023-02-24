@@ -12,15 +12,11 @@ import glob
 import sys
 # For sleeping
 import time
-# Telegram bots for error reporting and user notification
+# Bots for error reporting and user notification
 import error_reporting
-import telegram_bot
 import traceback
 import getopt
-# Email bot
-from email_bot import EmailBot
-# Push notification bot
-from push_notification_bot import PushNotificationBot
+from user_notifications import UserNotifications
 # Credentials/secrets/tokens
 import config
 
@@ -230,15 +226,8 @@ Options:
         conn.autocommit = True
         cursor = conn.cursor()
 
-        if run_telegram_bot:
-            # Set up SnapperGPS Telegram bot for user notification
-            t_bot = telegram_bot.TelegramBot()
-
-        # Set up SnapperGPS email bot for user notification
-        e_bot = EmailBot()
-
-        # Set up SnapperGPS bot for user push notification
-        p_bot = PushNotificationBot()
+        # Start the user notification bots
+        notifications = UserNotifications(run_telegram_bot=run_telegram_bot)
 
         try:
 
@@ -307,17 +296,9 @@ Options:
                         _process_upload(cursor, upload_id, reference_points,
                                         max_velocity, max_batch_size)
 
-                        # Send push message to user
-                        p_bot.send_msg(upload_id)
-
-                        # Send e-mail to user
-                        e_bot.final_email(cursor, upload_id)
-
-                        # Send Telegram message to user
-                        if run_telegram_bot:
-                            t_bot.send_msg(upload_id)
-                        else:
-                            telegram_bot.send_msg_no_bot(cursor, upload_id)
+                        # Notify user that processing is done
+                        notifications.send_notifications(cursor=cursor,
+                                                         upload_id=upload_id)
 
                         # Stop looping and fetch waiting uploads again
                         break
@@ -356,8 +337,5 @@ Attempting restart in {} s.
             # Close connection to database
             cursor.close()
             conn.close()
-            if run_telegram_bot:
-                # Shutdown Telegram bot for user notfication
-                t_bot.stop()
-            # Shutdown email bot for user notification
-            e_bot.stop()
+            # Stop the user notfication bots
+            del notifications

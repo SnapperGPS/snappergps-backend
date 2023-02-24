@@ -14,6 +14,11 @@ database_password \
 database_user = 'todo'
 database_name = 'todo'
 
+# Which user notfications to use
+use_telegram_notifications = True
+use_email_notifications = True
+use_push_notifications = True
+
 # E-mail (for emailed user notfications and VAPID claims for push notifications)
 smtp_server = "todo"
 sender_email = "todo"
