@@ -23,6 +23,8 @@ import gzip
 # For error reporting
 import error_reporting
 import traceback
+# For command line arguments
+import getopt
 # For reading RINEX navigation data files
 sys.path.insert(1, os.path.join(
     sys.path[0], os.path.join(os.path.dirname(__file__), "..", "..", "core")))
@@ -204,7 +206,10 @@ def _read_rinex(ddd, yyyy, navigation_data_directory, record_date, rinex_file,
             # or file is not strcutured as expected
             # Try to read GNSS individually
             # Extract Galileo
-            eph = rinexe(rinex_file, 'E')
+            try:
+                eph = rinexe(rinex_file, 'E')
+            except ValueError:
+                eph = np.empty(shape=(21, 0))
             # Check if Galileo is present
             if eph.shape[1] > 0:
                 # Save navigation data to file
@@ -215,7 +220,10 @@ def _read_rinex(ddd, yyyy, navigation_data_directory, record_date, rinex_file,
             else:
                 print(f"No Galileo data for {record_date}.")
             # Extract BeiDou
-            eph = rinexe(rinex_file, 'C')
+            try:
+                eph = rinexe(rinex_file, 'C')
+            except ValueError:
+                eph = np.empty(shape=(21, 0))
             # Check if BeiDou is present
             if eph.shape[1] > 0:
                 # Save navigation data to .npy file
@@ -226,7 +234,10 @@ def _read_rinex(ddd, yyyy, navigation_data_directory, record_date, rinex_file,
             else:
                 print(f"No BeiDou data for {record_date}.")
             # Extract GPS
-            eph = rinexe(rinex_file, 'G')
+            try:
+                eph = rinexe(rinex_file, 'G')
+            except ValueError:
+                eph = np.empty(shape=(21, 0))
             # Check if GPS is present
             if eph.shape[1] > 0:
                 # Save navigation data to .npy file
@@ -246,7 +257,10 @@ def _read_rinex(ddd, yyyy, navigation_data_directory, record_date, rinex_file,
         download_brdc(ddd, yyyy, rinex_file, rinex_3=False)
         if os.path.exists(rinex_file):
             print(f"Downloaded .{yy:02d}n file for {record_date}.")
-            eph = rinexe(rinex_file, 'G')
+            try:
+                eph = rinexe(rinex_file, 'G')
+            except ValueError:
+                eph = np.empty(shape=(21, 0))
             if eph.shape[1] > 0:
                 # Save navigation data to .npy file
                 np.save(os.path.join(navigation_data_directory,
@@ -279,26 +293,56 @@ def _clean_up(navigation_data_directory, yyyy, ddd, yy):
 
 if __name__ == "__main__":
 
+    # Handle command line arguments
+    usage = f"""
+Usage: python {sys.argv[0]} [-h] | [-d=<past_days>]
+
+Examples: python {sys.argv[0]}
+          python {sys.argv[0]} --past-days 2
+          python {sys.argv[0]} -d 2
+
+Options:
+
+    -d
+    --past-days
+    Number of days in the past to download satellite navigation data for.
+    Defaults to 2.
+    Snapshots recorded at a day for which no satellite data is downloaded cannot
+    be processed.
+"""
+    argv = sys.argv[1:]
+    options, arguments = getopt.getopt(
+        argv,
+        "hd:",
+        ["help", "past-days="])
+    n_prev_days = 2
+    for opt, arg in options:
+        if opt in ("-h", "--help"):
+            print(usage)
+            sys.exit()
+        elif opt in ("-d", "--past-days"):
+            n_prev_days = int(arg)
+
     # Name of the data location
     navigation_data_directory = "navigation_data"
+
+    # Data source, NASA or BKG
+    bkg = False
 
     try:
 
         while True:
 
-            # Data source, NASA or BKG
-            bkg = False
-
             today = dt.date.today()
 
-            # The earliest date for which the database holds data
-            # and the number of days that are updated during every download
-            # TODO: Choose reasonable start date
+            # The earliest date for which to download data
+            record_date = today - dt.timedelta(days=n_prev_days)  # dt.date(2020, 12, 2)
+            
+            # Number of days that are updated during every download
             if bkg:
                 n_prev_days = 0
             else:
                 n_prev_days = 2
-            record_date = today - dt.timedelta(days=n_prev_days)  # dt.date(2020, 12, 2)
 
             # Loop over all days for which we want to have data
             # and check if data exists
