@@ -773,7 +773,12 @@ def coarse_time_nav_simplified(obs, sats, Eph, TOW_assist_ms, rec_loc_assist, so
             # Add height measurement
             delta_z = np.append(delta_z, observed_height - predicted_height)
 
-        x = np.linalg.lstsq(H, delta_z, rcond=None)[0]
+        try:
+            x = np.linalg.lstsq(H, delta_z, rcond=None)[0]
+        except Exception as e:
+            print("Least-squares optimization failed:")
+            print(e)
+            continue
         state = state + x
 
     if hdop:
