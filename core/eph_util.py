@@ -2859,6 +2859,9 @@ def acquisition(longsignal, IF, Fs, freq_step=500,
     return acquired_sv, acquired_snr, acquired_doppler, acquired_codedelay,\
         acquired_fine_freq, results_doppler, results_code_phase,\
         results_peak_metric
+        
+        
+use_single_precision = False
 
 
 def acquisition_simplified(signals, utc, pos_geo, rinex_file=None, eph=None,
@@ -2918,6 +2921,8 @@ def acquisition_simplified(signals, utc, pos_geo, rinex_file=None, eph=None,
 
     Author: Jonas Beuchert
     """
+    global use_single_precision  # Whether to use single precission for IFFT or not
+    
     # Remove signal mean to avoid DC artefacts in the frequency domain
     signals = signals.astype(np.float32)
     signals = signals - np.mean(signals, axis=-1, keepdims=True)
@@ -3141,7 +3146,20 @@ def acquisition_simplified(signals, utc, pos_geo, rinex_file=None, eph=None,
     signals = np.repeat(signals[:, :, np.newaxis, :], n_channels, axis=2)
 
     # Correlate in frequency domain and transform back into time domain
-    correlation = np.abs(fft_lib.ifft(np.repeat(replicas_f, n_bins, axis=0) * signals))**2
+    if not use_single_precision:
+        try:
+            correlation = np.abs(fft_lib.ifft((np.repeat(replicas_f, n_bins, axis=0) * signals)))**2
+        except Exception as e:
+            print("Correlation with double precision failed because of:")
+            print(e)
+            print("Use single precision in the future.")
+            use_single_precision = True
+    if use_single_precision:
+        import scipy.fft as fft_scipy
+        signals = signals.astype(np.csingle)
+        replicas_f = replicas_f.astype(np.csingle)
+        x = (np.repeat(replicas_f, n_bins, axis=0) * signals).astype(np.csingle)
+        correlation = np.abs(fft_scipy.ifft(x, overwrite_x=True).astype(np.csingle))**2
 
     # Sum all channels and all signals chunks of one
     # snapshot (non-coherent integration)
@@ -3535,8 +3553,9 @@ def ionospheric_tsui(elevation, azimuth, latitude, longitude, gps_time,
     return T_iono
 
 
-# global_relief_model = None
+global_relief_model = None
 global_relief_interpolator = None
+use_local_interpolator = False
 digital_elevation_model = None
 geo_interpolator = None
 geo_interpolator_type = None
@@ -3639,21 +3658,58 @@ def get_elevation(latitude, longitude, model='ETOPO1', geoid='egm96-5'):
         import rockhound as rh
         import scipy.interpolate as sip
 
+        global global_relief_model
         global global_relief_interpolator
-
-        # Check if topography grid has not been loaded already
-        if not global_relief_interpolator:
+        global use_local_interpolator
+        
+        if not global_relief_model:
             # Load a version of the topography grid
+            print("Load topography grid...")
             global_relief_model = rh.fetch_etopo1(version="ice")
+            print("...done.")
+            
+        
+        # Check if global or local interpolator shall be used
+        # Use global interpolator only if enough RAM is available
+        if not use_local_interpolator:
+                
             # Create (linear) interpolation function
-            global_relief_interpolator = sip.RegularGridInterpolator(
-                (global_relief_model.latitude.values,
-                 global_relief_model.longitude.values),
-                global_relief_model.ice.values)
+            try:
 
-        # Interpolate grid at desired coordinates (w.r.t. sea level)
-        elevation = global_relief_interpolator(np.array([latitude,
-                                                         longitude]).T)
+                # Check if topography grid has not been loaded already
+                if not global_relief_interpolator:
+                    global_relief_interpolator = sip.RegularGridInterpolator(
+                        (global_relief_model.latitude.values,
+                        global_relief_model.longitude.values),
+                        global_relief_model.ice.values)
+                
+                # Interpolate grid at desired coordinates (w.r.t. sea level)
+                elevation = global_relief_interpolator(np.array([latitude,
+                                                                    longitude]).T)
+                use_local_interpolator = False
+            except Exception as e:
+                print("Cannot use global interpolator because of:")
+                print(e)
+                print("Use local interpolator instead.")
+                # Remember to use local interpolator
+                use_local_interpolator = True
+        
+        if use_local_interpolator:
+            
+            local_relief_model = global_relief_model.sel(
+                latitude=slice(int(np.floor(latitude)), int(np.ceil(latitude))),
+                longitude=slice(int(np.floor(longitude)), int(np.ceil(longitude)))
+            )
+            
+            
+            local_relief_interpolator = sip.RegularGridInterpolator(
+                (local_relief_model.latitude.values,
+                 local_relief_model.longitude.values),
+                 local_relief_model.ice.values)
+            
+            # Interpolate grid at desired coordinates (w.r.t. sea level)
+            elevation = local_relief_interpolator(np.array([latitude,
+                                                            longitude]).T)
 
     elif model == 'SRTM1':
 
