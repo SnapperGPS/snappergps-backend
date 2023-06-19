@@ -82,6 +82,9 @@ def _process_upload(cursor, upload_id, reference_points, max_velocity=np.inf,
     # Get the timestamps as additional input
     datetime_input = np.array([np.datetime64(row[2]) for row in rows])
 
+    # Get the temperatures as additional input
+    temperature_input = np.array([row[3] for row in rows])
+
     # # Which data was recorded before the reference
     # before_reference_idx = np.where(datetime_input <= dt)[0]
     # # ...and after reference
@@ -98,6 +101,8 @@ def _process_upload(cursor, upload_id, reference_points, max_velocity=np.inf,
         datetime_input <= dt_end))[0]
     # Use only time inputs after deployment start date / before deployment end
     datetime_input = datetime_input[use_idx]
+    # Use only temperature inputs after deployment start date / before deployment end
+    temperature_input = temperature_input[use_idx]
 
     # Read signals from database
     # How many bytes to read
@@ -125,7 +130,7 @@ def _process_upload(cursor, upload_id, reference_points, max_velocity=np.inf,
             # TODO:
             # Choose a reasonable batch size to fill but not overfill your RAM
             max_batch_size=max_batch_size,
-            temperature=np.array([row[3] for row in rows]),
+            temperature=temperature_input,
             max_velocity=max_velocity)
 
     ###########################################################################
