@@ -65,18 +65,18 @@ Tested with Python 3.7 on Ubuntu 16.04.
 
 ## Acknowledgements
 
-SnapperGPS is developed by
-[Jonas Beuchert](https://users.ox.ac.uk/~kell5462/),
-[Amanda Matthes](https://amanda-matthes.github.io/), and
+[Jonas Beuchert](https://users.ox.ac.uk/~kell5462/) and
 [Alex Rogers](https://www.cs.ox.ac.uk/people/alex.rogers/)
+are based
 in the Department of Computer Science
 of the University of Oxford.
 
-Jonas Beuchert and Amanda Matthes are
+Jonas Beuchert is
 funded by the EPSRC Centre for Doctoral Training in
 Autonomous Intelligent Machines and Systems
-(DFT00350-DF03.01, DFT00350-DF03.05) and develop
-SnapperGPS as part of their doctoral studies.
+(University of Oxford Project Code: DFT00350-DF03.01, UKRI/EPSRC Grant Reference: EP/S024050/1)
+and works on
+SnapperGPS as part of his doctoral studies.
 
 ##
 
