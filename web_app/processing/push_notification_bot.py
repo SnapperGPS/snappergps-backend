@@ -22,18 +22,12 @@ class PushNotificationBot:
     Author: Jonas Beuchert
     """
 
-    def __init__(self):
+    def __init__(self, db_connection: 'psycopg2.extensions.connection') -> None:
 
         print("Starting push notification bot...")
 
-        # Connect to database
-        conn = psycopg2.connect(host=config.database_url,
-                                sslmode='require',
-                                password=config.database_password,
-                                user=config.database_user,
-                                dbname=config.database_name)
-        conn.autocommit = True
-        self.cursor = conn.cursor()
+        # Get cursor to database
+        self.cursor = db_connection.cursor()
 
     def send_msg(self, upload_id):
         """Send push notification that processing is completed."""
