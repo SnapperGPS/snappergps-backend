@@ -29,25 +29,19 @@ class EmailBot:
     Author: Jonas Beuchert
     """
 
-    def __init__(self):
+    def __init__(self, db_connection: 'psycopg2.extensions.connection') -> None:
 
         self.last_email_sent_datetime = datetime.datetime(1970, 1, 1, 0, 0, 0)
 
-        # Connect to database
-        self.conn = psycopg2.connect(host=config.database_url,
-                                     sslmode='require',
-                                     password=config.database_password,
-                                     user=config.database_user,
-                                     dbname=config.database_name)
-        self.conn.autocommit = True
-        self.cursor = self.conn.cursor()
+        # Get cursor to database
+        self.cursor = db_connection.cursor()
 
         # Asynchronously start email bot
         thr = threading.Thread(target=self._loop)
         thr.start()
 
     def _loop(self):
-        """Wait for uploads and immidiately send email to user."""
+        """Wait for uploads and immediately send email to user."""
         try:
 
             self.keep_running = True
@@ -82,9 +76,8 @@ Error in email bot: {}
 """.format(traceback.format_exc()))
         finally:
             print("Shutting down email bot...")
-            # Close connection to database
+            # Close cursor to database
             self.cursor.close()
-            self.conn.close()
             # Return
             sys.exit(0)
 

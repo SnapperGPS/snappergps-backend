@@ -19,7 +19,7 @@ class TelegramBot:
     Author: Jonas Beuchert
     """
 
-    def __init__(self):
+    def __init__(self, db_connection: 'psycopg2.extensions.connection') -> None:
 
         self.updater = Updater(token=config.telegram_token, use_context=True)
 
@@ -111,14 +111,8 @@ class TelegramBot:
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      text=text)
 
-        # Connect to database
-        conn = psycopg2.connect(host=config.database_url,
-                                sslmode='require',
-                                password=config.database_password,
-                                user=config.database_user,
-                                dbname=config.database_name)
-        conn.autocommit = True
-        self.cursor = conn.cursor()
+        # Get cursor for database
+        self.cursor = db_connection.cursor()
 
         # Have this function called every time the bot receives a message
         reply_handler = MessageHandler(Filters.all, _reply_to_msg)

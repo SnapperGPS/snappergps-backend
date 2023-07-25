@@ -232,7 +232,8 @@ Options:
         cursor = conn.cursor()
 
         # Start the user notification bots
-        notifications = UserNotifications(run_telegram_bot=run_telegram_bot)
+        notifications = UserNotifications(db_connection=conn,
+                                          run_telegram_bot=run_telegram_bot)
 
         try:
 

@@ -14,7 +14,9 @@ class UserNotifications:
     Author: Jonas Beuchert
     """
 
-    def __init__(self, run_telegram_bot: bool) -> None:
+    def __init__(self,
+                 db_connection: 'psycopg2.extensions.connection',
+                 run_telegram_bot: bool) -> None:
         """Start the user notification bots.
 
         Start Telegram bot if config.use_telegram_notifications is True and run_telegram_bot is True.
@@ -27,15 +29,15 @@ class UserNotifications:
         self.run_telegram_bot = run_telegram_bot
         if config.use_telegram_notifications and run_telegram_bot:
             # Set up SnapperGPS Telegram bot for user notification
-            self.t_bot = telegram_bot.TelegramBot()
+            self.t_bot = telegram_bot.TelegramBot(db_connection=db_connection)
 
         if config.use_email_notifications:
             # Set up SnapperGPS email bot for user notification
-            self.e_bot = EmailBot()
+            self.e_bot = EmailBot(db_connection=db_connection)
 
         if config.use_push_notifications:
             # Set up SnapperGPS bot for user push notification
-            self.p_bot = PushNotificationBot()
+            self.p_bot = PushNotificationBot(db_connection=db_connection)
 
 
     def send_notifications(self, cursor, upload_id: str) -> None:
