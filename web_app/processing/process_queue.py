@@ -320,7 +320,7 @@ Options:
                             upload_id))
 
                 # Query job queue every 5 s for waiting jobs
-                time.sleep(5)
+                time.sleep(15)
 
                 # Reset waiting time
                 restart_wait_time = 60.0
