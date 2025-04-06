@@ -405,7 +405,8 @@ snapshot buffer with {len(snapshots)} bytes.""")
                     # These parameters determine the max. spatial & temporal
                     # distance between consecutive snapshots to be plausible
                     # Shall depend on the application scenario
-                    max_dist=10.0e3, max_time=30.0,
+                    max_dist=10.0e3 if max_velocity > 1.0e3 else 100.0e3,  # Use small Max_dist only if max_velocity is unplausibly high
+                    max_time=30.0,
                     # If we would know an initial offset of the timestamps
                     # If data is processed in mini-batches, the error from
                     # previous one
