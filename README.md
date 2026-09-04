@@ -1,3 +1,5 @@
+> **Note:** This is a previous version of the back-end, interfacing with a PostgreSQL database in the cloud. For the version that is currently running and interfacing with Google Cloud instead, see here: [https://github.com/SnapperGPS/snappergps-backend-v2](https://github.com/SnapperGPS/snappergps-backend-v2).
+
 # snappergps-backend
 
 This is the back-end of the [SnapperGPS web application](https://snappergps.info) that takes signal snapshots from a [PostgreSQL](https://www.postgresql.org/) database and puts back location estimates. It is basically an extended version of [the *snapshot-gnss-algorithms* repository](https://github.com/JonasBchrt/snapshot-gnss-algorithms).
